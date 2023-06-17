@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -21,6 +22,18 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'image',
+        'telefone',
+        'perfil',
+        'cargo',
+        'nascimento',
+        'logradouro',
+        'bairro',
+        'cidade',
+        'estado',
+        'cep',
+        'senha',
+        'confirmar_senha',
     ];
 
     /**
@@ -41,4 +54,30 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function getUsers(string|null $search = null){
+
+        $users = $this->where(function ($query) use ($search) {
+            if($search){
+                $query->where('email', 'LIKE', "%{$search}%");
+                $query->orWhere('name', 'LIKE', "%{$search}%");
+            }
+        })->paginate(10);
+        //dd($users);
+        return $users;
+    }
+
+    public function getEmail(string|null $search = null){
+
+        $email = $this->where(function ($query) use ($search) {
+            if($search){
+                $query->where('email', $search);
+                $query->orWhere('name', 'LIKE', "%{$search}%");
+            }
+        });
+        //dd($email);
+        return $email;
+    }
+
+
 }
