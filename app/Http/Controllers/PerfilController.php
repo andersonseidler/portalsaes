@@ -38,11 +38,11 @@ class PerfilController extends Controller
             alert()->error('Preencha o campo senha!');
             return redirect()->route('perfil.index');    
         }
-        if(!$request->confirmar_senha){
+        if(!$request->password_confirm){
             alert()->error('Preencha o campo confirmar senha!');
             return redirect()->route('perfil.index');    
         }
-        if($request->password != $request->confirmar_senha){
+        if($request->password != $request->password_confirm){
             alert()->error('Senhas não coicidem!');
             return redirect()->route('perfil.index');    
         }

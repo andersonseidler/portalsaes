@@ -54,12 +54,14 @@
                             
 
                             getMes.value =  resultMes;
-                            //console.log(resultMes);
+                            console.log(formattedDate);
                             input.value = formattedDate;
 
                         }
                         </script>
                     <input type="hidden" name="status" value="PENDENTE">
+                    <input type="hidden" id="inputdata" name="date">
+                    <input type="hidden" id="inputmes" name="numeromes" value="">
                     <input type="hidden" name="class_status" value="badge badge-outline-warning">
                     <input type="hidden" name="foto" id="idImage">
                     <div class="col-lg-12">

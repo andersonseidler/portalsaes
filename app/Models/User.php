@@ -34,6 +34,10 @@ class User extends Authenticatable
         'cep',
         'senha',
         'confirmar_senha',
+        'facebook',
+        'instagram',
+        'skype',
+        'linkedin',
     ];
 
     /**

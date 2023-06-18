@@ -22,13 +22,6 @@
     <div class="card">
         <div class="card-body">
             <div class="row">
-                @if ($errors->any())
-                    <ul class="errors">
-                        @foreach ($errors->all() as $error)
-                            <div class="alert alert-danger" role="alert">{{ $error }}</div>
-                        @endforeach
-                    </ul>
-                @endif
                 <div class="col-sm-12">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h4 class="header-title">Categorias</h4>
@@ -54,10 +47,10 @@
                                     <td>{{ $cat->nome_doc }}</td>
                                     <td>{{ Carbon\Carbon::parse($cat->create_at)->format('d/m') }}</td>
                                     <td class="table-action">
-                                        <a href="{{ route('category.edit', $cat->id) }}" class="action-icon"> <i class="mdi mdi-pencil"></i></a>
-                                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                                            data-bs-target="#standard-modal-edit" data-nome-doc="{{ $cat->nome_doc }}">Cadastrar</button>
-
+                                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#standard-modal-edit" 
+                                        data-category-id="{{ $cat->id }}" data-nome-doc="{{ $cat->nome_doc }}"><i class="mdi mdi-pencil"></i></button>
+                                        <a href="{{ route('category.destroy', $cat->id) }}"
+                                            class="action-icon mdi mdi-delete" data-confirm-delete="true"></a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -86,33 +79,34 @@
         <!-- /.Standard modal -->
 
         <!-- Standard modal -->
-        <div id="standard-modal-edit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel"
-            aria-hidden="true">
+        <div id="standard-modal-edit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title" id="standard-modalLabel">Nova categoria</h4>
+                        <h4 class="modal-title" id="standard-modalLabel">Editar categoria</h4>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route('category.update', $cat->id) }}" method="POST">
+                        <form id="edit-category-form" action="{{ route('category.update', ['id' => $cat->id]) }}" method="POST">
                             @csrf
                             @method('PUT')
-                            {{-- @include('users._partials.form-edit-user') --}}
+        
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="mb-3">
-                                        <label">Nome da categoria</label>
-                                            <input type="text" name="nome_doc" value="{{ $cat->nome_doc ?? old('nome_doc') }}"  class="form-control" id="nome-doc-input">
+                                        <label for="nome-doc-input">Nome da categoria</label>
+                                        <input type="text" name="nome_doc" value="" class="form-control" id="nome-doc-input">
                                     </div>
                                 </div>
                             </div>
-                            
+        
+                            <input type="hidden" name="category_id" id="category-id-input">
+        
                             <br>
                             <div class="row">
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Fechar</button>
-                                    <button type="submit" class="btn btn-primary">Cadastrar</button>
+                                    <button type="submit" class="btn btn-primary">Salvar</button>
                                 </div>
                             </div>
                         </form>
@@ -120,14 +114,18 @@
                 </div>
             </div>
         </div>
-        <!-- /.Standard modal -->
+        
         <script>
-            $('#standard-modal-edit').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget);
-                var nomeDoc = button.data('nome_doc');
-                console.log(nomeDoc);
-                var nomeDocInput = $(this).find('#nome-doc-input');
-                nomeDocInput.val(nomeDoc);
+            $(document).ready(function() {
+                $('#standard-modal-edit').on('show.bs.modal', function(event) {
+                    var button = $(event.relatedTarget);
+                    var categoryId = button.data('category-id');
+                    var nomeDoc = button.data('nome-doc');
+        
+                    $('#edit-category-form').attr('action', '{{ route("category.update", ["id" => ":category_id"]) }}'.replace(':category_id', categoryId));
+                    $('#category-id-input').val(categoryId);
+                    $('#nome-doc-input').val(nomeDoc);
+                });
             });
         </script>
 @endsection

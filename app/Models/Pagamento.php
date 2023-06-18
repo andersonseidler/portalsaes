@@ -21,6 +21,8 @@ class Pagamento extends Model
         'email',
         'arquivo',
         'status',
+        'mes',
+        'numeromes',
         'class_status',
         'foto',
     ];

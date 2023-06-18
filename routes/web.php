@@ -39,6 +39,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/pagamento', [PgController::class, 'store'])->name('pagamento.store');
 
     //CATEGORIAS
+    Route::delete('/categoria/{id}', [CategoriasController::class, 'destroy'])->name('category.destroy');
     Route::put('/categoria/{id}', [CategoriasController::class, 'update'])->name('category.update');
     Route::get('/categoria/{id}/edit', [CategoriasController::class, 'edit'])->name('category.edit');
     Route::get('/categoria/create', [CategoriasController::class, 'create'])->name('category.create');

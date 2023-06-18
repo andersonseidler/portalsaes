@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Support\Facades\DB;
 
 class Adiantamento extends Model
 {
@@ -22,6 +21,8 @@ class Adiantamento extends Model
         'email',
         'arquivo',
         'status',
+        'mes',
+        'numeromes',
         'class_status',
         'foto',
     ];

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('colaborador');
             $table->string('email');
             $table->string('arquivo');
+            $table->string('mes');
             $table->string('numeromes');
             $table->string('status');
             $table->string('class_status');

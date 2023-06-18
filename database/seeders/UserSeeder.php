@@ -26,6 +26,10 @@ class UserSeeder extends Seeder
             'cidade' => 'Canoas',
             'estado' => 'RS',
             'cep' => '92035-580',
+            'facebook' => 'https://www.facebook.com/andersonseidller/',
+            'instagram' => 'https://www.instagram.com/andersonseidller/',
+            'skype' => '#',
+            'linkedin' => 'https://www.linkedin.com/in/anderson-seidler-4b8713277/',
         ]);
     }
 }

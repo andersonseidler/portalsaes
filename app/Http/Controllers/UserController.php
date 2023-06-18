@@ -45,11 +45,10 @@ class UserController extends Controller
         return view('users.create');
     }
     //metodo para cadastrar o usuario no banco
-    public function store(StoreUpdateUserFormRequest $request){
+    public function store(Request $request){
         $data = $request->all();
         //dd($data);
         $data['password'] = bcrypt($request->password);
-        $data['senha'] = bcrypt($request->senha);
         if(!$request->name){
             alert()->error('Preencha o nome!');
         }
@@ -97,7 +96,7 @@ class UserController extends Controller
         }
 
         if($request->password != $request->password_confirm){
-            alert()->error('Senhas não coicidem!');
+            alert()->error('Senhas não coincidem!');
             return redirect()->route('users.edit', $id);
         }
 

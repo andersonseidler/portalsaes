@@ -15,7 +15,11 @@ class CategoriasController extends Controller
     }
 
     public function index(Request $request){
-        
+
+        $title = 'Excluir!';
+        $text = "Deseja excluir esse documento?";
+        confirmDelete($title, $text);
+
         $cats = CatDoc::all();
         //dd($cats);
         return view('category.index', compact('cats'));
@@ -53,5 +57,17 @@ class CategoriasController extends Controller
             alert()->success('Categoria editada com sucesso!');
             return redirect()->route('category.index');
         }
+    }
+
+    public function destroy($id){
+        if(!$doc = $this->model->find($id)){
+            alert()->error('Erro ao excluír o pagamento!');
+        }
+        
+        if($doc->delete()){
+            alert()->success('Pagamento excluído com sucesso!');
+        }
+
+        return redirect()->route('category.index');
     }
 }
