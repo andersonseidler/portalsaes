@@ -24,8 +24,6 @@ return new class extends Migration
             $table->string('cidade');
             $table->string('estado');
             $table->string('cep');
-            $table->string('senha');
-            $table->string('confirmar_senha');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('image')->nullable();

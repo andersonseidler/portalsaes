@@ -98,17 +98,17 @@
                     <div class="col-lg-6">
                         <div class="mb-3">
                             <label">Senha</label>
-                            <input type="text" name="senha" class="form-control" placeholder=" " />
+                            <input type="text" name="password" id="password" class="form-control"/>
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="mb-3">
                             <label">Confirmar senha</label>
-                            <input type="text" name="confirmar_senha" class="form-control" placeholder=" " />
+                            <input type="text" name="password_confirm" id="password_confirm" class="form-control"/>
                         </div>
                     </div>
                 </div>
-
+                
                 <div class="row">
                     <h4 class="header-title">Foto de perfil</h4>
                     <div class="col-lg">

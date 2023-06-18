@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreUpdateUserFormRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -50,7 +50,6 @@ class UserController extends Controller
         //dd($data);
         $data['password'] = bcrypt($request->password);
         $data['senha'] = bcrypt($request->senha);
-
         if(!$request->name){
             alert()->error('Preencha o nome!');
         }
@@ -83,25 +82,38 @@ class UserController extends Controller
     }
 
     public function update(Request $request, $id){
-        //dd($request);
+        //dd($id);
         $data = $request->except('senha','confirmar_senha');
+
+        $data['password'] = bcrypt($request->password);
+        $data['password_confirm'] = bcrypt($request->password);
         //dd($data);
-        if(!$user = $this->model->find($id))
+        if(!$user = $this->model->find($id)){
             return redirect()->route('users.index');
-              
+        }
+
         if($request->image){
             $data['image'] = $request->image->store('users');
         }
 
-        if($request->password)
-            $data['password'] = bcrypt($request->password);
-            alert()->success('Usuário editado com sucesso!');
+        if($request->password != $request->password_confirm){
+            alert()->error('Senhas não coicidem!');
+            return redirect()->route('users.edit', $id);
+        }
+
         $user->update($data);
+        alert()->success('Usuário editado com sucesso!');
 
         return redirect()->route('users.index');
     }
 
     public function destroy($id){
+        //COMPARA DE ESTA TENTANDO O USUARIO LOGADO
+        if (Auth::user()->id === (int) $id) {
+            alert()->error('Você não pode se excluir!');
+            return redirect()->route('users.index');
+        }
+
         if(!$user = $this->model->find($id)){
             return redirect()->route('users.index');
         }
@@ -111,6 +123,7 @@ class UserController extends Controller
         }
         return redirect()->route('users.index');
     }
+    
 
     public function deleteAll(Request $request){
         $ids = $request->ids;

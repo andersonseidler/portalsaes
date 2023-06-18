@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
     {
         User::create([
             'name' => 'Anderson',
-            'email' => 'andersonqipo2a@gmail.com',
+            'email' => 'andersonqipoa@gmail.com',
             'password' => bcrypt('12345678'),
             'telefone' => '(51)991377276',
             'perfil' => 'Administrador',
@@ -26,8 +26,6 @@ class UserSeeder extends Seeder
             'cidade' => 'Canoas',
             'estado' => 'RS',
             'cep' => '92035-580',
-            'senha' => '123456789',
-            'confirmar_senha' => '123456789',
         ]);
     }
 }

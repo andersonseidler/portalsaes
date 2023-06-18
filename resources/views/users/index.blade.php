@@ -42,7 +42,7 @@
                 <table class="table table-striped table-centered mb-0">
                     <thead>
                         <tr>
-                            <th><input type="checkbox" name="" id="select_all_ids"></th>
+                            {{-- <th><input type="checkbox" name="" id="select_all_ids"></th> --}}
                             <th>Nome</th>
                             <th>E-mail</th>
                             <th>Telefone</th>
@@ -53,7 +53,7 @@
                     <tbody>
                         @foreach ($users as $user)
                         <tr id="employee_ids{{ $user->id }}">
-                            <td><input type="checkbox" name="ids" class="checkbox_ids" value="{{$user->id}}"></td>
+                            {{-- <td><input type="checkbox" name="ids" class="checkbox_ids" value="{{$user->id}}"></td> --}}
                             <td class="table-user">
                                 @if($user->image)
                                     <img src="{{ url("storage/{$user->image}") }}" alt="{{ $user->name }}" class="me-2 rounded-circle">

@@ -200,8 +200,13 @@
                 <a class="nav-link dropdown-toggle arrow-none nav-user px-2" data-bs-toggle="dropdown" href="#"
                     role="button" aria-haspopup="false" aria-expanded="false">
                     <span class="account-user-avatar">
+                        @if(auth()->user()->image)
                         <img src="../../storage/{{ auth()->user()->image }}" alt="user-image" width="32"
                             class="rounded-circle">
+                        @else
+                        <img src="{{ url('assets/img/icon_user.png') }}" alt="user-image" width="32"
+                            class="rounded-circle">
+                        @endif
                     </span>
                     <span class="d-lg-flex flex-column gap-1 d-none">
                         <h5 class="my-0">{{ auth()->user()->name }}</h5>
