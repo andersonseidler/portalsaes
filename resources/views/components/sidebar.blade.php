@@ -86,7 +86,7 @@
                             <a href="{{ route('category.index') }}">Categorias</a>
                         </li>
                         <li>
-                            <a href="layouts-detached.html">Subcategorias</a>
+                            <a href="{{ route('subcategory.index') }}">Subcategorias</a>
                         </li>
                         <li>
                             <a href="{{ route('users.index') }}">Usuários</a>

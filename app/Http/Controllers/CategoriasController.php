@@ -17,7 +17,7 @@ class CategoriasController extends Controller
     public function index(Request $request){
 
         $title = 'Excluir!';
-        $text = "Deseja excluir esse documento?";
+        $text = "Deseja excluir essa categoria?";
         confirmDelete($title, $text);
 
         $cats = CatDoc::all();
@@ -65,7 +65,7 @@ class CategoriasController extends Controller
         }
         
         if($doc->delete()){
-            alert()->success('Pagamento excluído com sucesso!');
+            alert()->success('Categoria excluída com sucesso!');
         }
 
         return redirect()->route('category.index');

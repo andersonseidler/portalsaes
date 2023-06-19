@@ -8,6 +8,7 @@ use App\Http\Controllers\DocumentosController;
 use App\Http\Controllers\AdController;
 use App\Http\Controllers\PgController;
 use App\Http\Controllers\CategoriasController;
+use App\Http\Controllers\SubCatController;
 use App\Http\Controllers\DashController;
 use Illuminate\Support\Facades\Route;
 
@@ -46,9 +47,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/categoria', [CategoriasController::class, 'index'])->name('category.index');
     Route::post('/categoria', [CategoriasController::class, 'store'])->name('category.store');
 
+    //SUBSCATEGORIAS
+    Route::get('/subcategorias/create', [SubCatController::class, 'create'])->name('subcategory.create');
+    Route::get('/subcategorias', [SubCatController::class, 'index'])->name('subcategory.index');
+    Route::post('/subcategorias', [SubCatController::class, 'store'])->name('subcategory.store');
+
     
     Route::post('getContatos', 'DashboardController@getContatos')->name('users.getContatos');
 
+    //DASHBOARD
     Route::get('/dashboard', [DashController::class, 'index'])->name('dashboard.index');
 
     //PERFIL
@@ -69,7 +76,6 @@ Route::middleware(['auth'])->group(function () {
     //PARCELAS
     Route::delete('/parcelas/delete/{id}', [ParcelaController::class, 'destroy'])->name('parcelas.destroy');
     Route::put('/parcelas/confirm/{id}', [ParcelaController::class, 'update'])->name('parcelas.update');
-    //Route::put('/parcelas/{id}', [ParcelaController::class, 'update'])->name('parcelas.update');
     Route::get('/parcelas/{id}', [ParcelaController::class, 'show'])->name('parcelas.show');
 });
 

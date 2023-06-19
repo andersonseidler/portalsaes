@@ -10,10 +10,10 @@
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item active">Categorias</li>
+                        <li class="breadcrumb-item active">Subcategorias</li>
                     </ol>
                 </div>
-                <h3 class="page-title">Categorias</h3>
+                <h3 class="page-title">Subcategorias</h3>
             </div>
         </div>
     </div>
@@ -24,7 +24,7 @@
             <div class="row">
                 <div class="col-sm-12">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h4 class="header-title">Categorias</h4>
+                        <h4 class="header-title">Subcategorias</h4>
                         <div class="dropdown">
                             <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
                                 data-bs-target="#standard-modal">Cadastrar</button>
@@ -35,21 +35,21 @@
                     <table class="table table-centered table-nowrap table-hover mb-0">
                         <thead>
                             <tr>
-                                <th>Documento</th>
+                                <th>Subcategoria</th>
                                 <th>Cadastrado em</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
 
                         <tbody>
-                            @foreach ($cats as $cat)
+                            @foreach ($subs as $sub)
                                 <tr>
-                                    <td>{{ $cat->nome_doc }}</td>
-                                    <td>{{ Carbon\Carbon::parse($cat->create_at)->format('d/m') }}</td>
+                                    <td>{{ $sub->nome_subcat }}</td>
+                                    <td>{{ Carbon\Carbon::parse($sub->create_at)->format('d/m') }}</td>
                                     <td class="table-action">
                                         <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#standard-modal-edit" 
-                                        data-category-id="{{ $cat->id }}" data-nome-doc="{{ $cat->nome_doc }}"><i class="mdi mdi-pencil"></i></button>
-                                        <a href="{{ route('category.destroy', $cat->id) }}"
+                                        data-subegory-id="{{ $sub->id }}" data-nome-doc="{{ $sub->nome_subcat }}"><i class="mdi mdi-pencil"></i></button>
+                                        <a href="{{ route('category.destroy', $sub->id) }}"
                                             class="action-icon mdi mdi-delete" data-confirm-delete="true"></a>
                                     </td>
                                 </tr>
@@ -67,11 +67,11 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title" id="standard-modalLabel">Nova categoria</h4>
+                        <h4 class="modal-title" id="standard-modalLabel">Nova subcategoria</h4>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
                     </div>
                     <div class="modal-body">
-                        @include('category.create')
+                        @include('subcategory.create')
                     </div>
                 </div>
             </div>
@@ -79,7 +79,7 @@
         <!-- /.Standard modal -->
 
         <!-- Standard modal -->
-        @foreach($cats as $cat)
+        @foreach($subs as $sub)
         <div id="standard-modal-edit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -88,7 +88,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="edit-category-form" action="{{ route('category.update', ['id' => $cat->id]) }}" method="POST">
+                        <form id="edit-category-form" action="{{ route('category.update', ['id' => $sub->id]) }}" method="POST">
                             @csrf
                             @method('PUT')
         
