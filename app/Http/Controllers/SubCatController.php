@@ -9,9 +9,9 @@ class SubCatController extends Controller
 {
     protected $model;
 
-    public function __construct(SubCatDoc $cats)
+    public function __construct(SubCatDoc $subs)
     {
-        $this->model = $cats;
+        $this->model = $subs;
     }
 
     public function index(Request $request){
@@ -71,4 +71,15 @@ class SubCatController extends Controller
 
         return redirect()->route('subcategory.index');
     }
+
+    public function obterSubcategorias(Request $request)
+    {
+        $categoria = $request->input('categoria_id');
+        $subcategorias = SubCatDoc::where('categoria_id', $categoria)->get();
+
+        return response()->json($subcategorias);
+    }
+
+
+
 }

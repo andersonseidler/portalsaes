@@ -81,12 +81,14 @@ class UserController extends Controller
     }
 
     public function update(Request $request, $id){
-        //dd($id);
-        $data = $request->except('senha','confirmar_senha');
-
-        $data['password'] = bcrypt($request->password);
-        $data['password_confirm'] = bcrypt($request->password);
-        //dd($data);
+        
+        if($request->password){
+            $data['password'] = bcrypt($request->password);
+            $data['password_confirm'] = bcrypt($request->password);
+        }else{
+            $data = $request->except('password','password_confirm');
+        }
+        
         if(!$user = $this->model->find($id)){
             return redirect()->route('users.index');
         }

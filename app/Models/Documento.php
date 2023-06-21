@@ -23,5 +23,17 @@ class Documento extends Model
         'arquivo',
     ];
 
+    public function getDocumentos(string|null $colaborador = null, string|null $documento = null){
+        $pags = $this->where(function ($query) use ($colaborador, $documento) {
+            if($colaborador){
+                $query->where('colaborador', $colaborador);
+            }
+            if($documento){
+                $query->where('documento', $documento);
+            }
+        })->paginate(10);
+        return $pags;
+    }
+
     
 }

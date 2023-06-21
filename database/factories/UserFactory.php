@@ -33,8 +33,6 @@ class UserFactory extends Factory
             'cidade' => fake()->city(),
             'estado' => 'RS',
             'cep' => '92035-580',
-            'senha' => '123456789',
-            'confirmar_senha' => '123456789',
         ];
     }
 

@@ -11,30 +11,23 @@
                               </select>
                         </div>
                     </div>
+
                     <div class="col-lg-12">
                         <div class="mb-3">
-                            <label">E-mail</label>
-                            <input type="text" class="form-control" name="email" id="idEmail">
+                            <label">Categoria</label>
+                            <select class="form-select" name="categoria" id="categoria">
+                                <option value="">Selecione o documento</option>
+                                @foreach ($categorias as $cats)
+                                    <option value="{{ $cats->id }}">{{ $cats->nome_doc }}</option>    
+                                @endforeach
+                            </select>
                         </div>
-                    </div>
-                    <div class="col-lg-12">
+                        <!-- Subcategoria -->
                         <div class="mb-3">
-                            <label">Mês referente</label>
-                            <select class="form-select" name="mes">
-                                <option value="">Selecione o colaborador</option>
-                                <option value="Janeiro">Janeiro</option>
-                                <option value="Fevereiro">Fevereiro</option>
-                                <option value="Março">Março</option>
-                                <option value="Abril">Abril</option>
-                                <option value="Maio">Maio</option>
-                                <option value="Junho">Junho</option>
-                                <option value="Julho">Julho</option>
-                                <option value="Agosto">Agosto</option>
-                                <option value="Setembro">Setembro</option>
-                                <option value="Outubro">Outubro</option>
-                                <option value="Novembro">Novembro</option>
-                                <option value="Dezembro">Dezembro</option>
-                              </select>
+                            <label>Subcategoria</label>
+                            <select class="form-select" name="subcategoria" id="subcategoria">
+                                <option value="">Selecione a subcategoria</option>
+                            </select>
                         </div>
                     </div>
                     <script type="text/javascript">
@@ -63,7 +56,7 @@
                     <input type="hidden" name="foto" id="idImage">
                     <div class="col-lg-12">
                         <div class="mb-3">
-                            <label">Contracheque</label>
+                            <label">Documento</label>
                             <div class="col-lg">
                                 <input class="form-control" type="file" name="arquivo">
                             </div>
@@ -91,3 +84,37 @@
                         <button type="submit" class="btn btn-primary">Cadastrar</button>
                     </div>
                 </div>
+
+                <script>
+                    document.getElementById('categoria').addEventListener('change', function() {
+                        var categoriaSelecionada = this.value;
+                        //console.log(categoriaSelecionada);
+                        fetch('{{ route("obtersubcategorias") }}?categoria_id=' + categoriaSelecionada)
+                            .then(function(response) {
+                                return response.json();
+                            })
+                            .then(function(data) {
+                                console.log(data); // Verifique a estrutura dos dados retornados
+                
+                                var subcategoriaSelect = document.getElementById('subcategoria');
+                                subcategoriaSelect.innerHTML = ''; // Limpa as opções existentes
+                
+                                // Adiciona a opção padrão
+                                var defaultOption = document.createElement('option');
+                                defaultOption.value = '';
+                                defaultOption.textContent = 'Selecione a subcategoria';
+                                subcategoriaSelect.appendChild(defaultOption);
+                
+                                // Adiciona as opções de subcategoria
+                                data.forEach(function(subcategoria) {
+                                    var option = document.createElement('option');
+                                    option.value = subcategoria.id;
+                                    option.textContent = subcategoria.nome_subcat; // Atribui o nome da subcategoria ao texto do option
+                                    subcategoriaSelect.appendChild(option);
+                                });
+                            })
+                            .catch(function(error) {
+                                console.log(error);
+                            });
+                    });
+                </script>

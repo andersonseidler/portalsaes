@@ -22,13 +22,13 @@
 <div class="card">
     <div class="card-body">
         <div class="row">
-            @if ($errors->any())
+            {{-- @if ($errors->any())
                 <ul class="errors">
                     @foreach ($errors->all() as $error)
                         <div class="alert alert-danger" role="alert">{{ $error }}</div>
                     @endforeach
                 </ul>
-            @endif
+            @endif --}}
             <div class="col-sm-12">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h4 class="header-title">Emprestimos lançados</h4>
@@ -39,6 +39,7 @@
                                 class="fa-solid fa-trash"></i></button>
                     </div>
                 </div>
+                @if ($docs->total() != 0)
                     <table class="table table-centered table-nowrap table-hover mb-0">
                         <thead>
                             <tr>
@@ -51,17 +52,22 @@
                         <tbody>
                             @foreach ($docs as $doc)
                                 <tr>
-                                    <td>{{ $emp->colaborador }}</td>
-                                    <td>{{ $emp->documento }}</td>
-                                    <td>{{ Carbon\Carbon::parse($emp->create_at)->format('d/m') }}</td>
+                                    <td>{{ $doc->colaborador }}</td>
+                                    <td>{{ $doc->documento }}</td>
+                                    <td>{{ Carbon\Carbon::parse($doc->create_at)->format('d/m') }}</td>
                                     <td class="table-action">
-                                        <a href="{{ route('parcelas.show', $emp->id) }}" class="action-icon"> <i
+                                        <a href="{{ route('parcelas.show', $doc->id) }}" class="action-icon"> <i
                                                 class="mdi mdi-eye"></i></a>
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
+                    @elseif($docs->total() == 0)
+                        <div class="alert alert-warning" role="alert">
+                            NENHUM RESULTADO ENCONTRADO!
+                        </div>
+                    @endif
             </div>
         </div>
     </div>

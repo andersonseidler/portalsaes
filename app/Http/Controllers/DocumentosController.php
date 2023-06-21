@@ -4,17 +4,26 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Documento;
+use App\Models\CatDoc;
 use App\Models\User;
 class DocumentosController extends Controller
 {
-    public function index(){
+    protected $model;
 
-        $docs = Documento::all();
+    public function __construct(Documento $docs)
+    {
+        $this->model = $docs;
+    }
+
+    public function index(Request $request){
+
+        $categorias = CatDoc::all();
+        $docs = $this->model->getDocumentos(colaborador: $request->colaborador, documento: $request->documento ?? '');
         $users = User::all();
-        //dd($emprestimos);
+        //dd($docs);
         
         //dd($users);
-        return view('documentos.index', compact(['users', 'docs']));
+        return view('documentos.index', compact(['users', 'docs','categorias']));
     }
 
     public function create(){
