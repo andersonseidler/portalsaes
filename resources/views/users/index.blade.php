@@ -56,9 +56,9 @@
                             {{-- <td><input type="checkbox" name="ids" class="checkbox_ids" value="{{$user->id}}"></td> --}}
                             <td class="table-user">
                                 @if($user->image)
-                                    <img src="{{ url("storage/{$user->image}") }}" alt="{{ $user->name }}" class="me-2 rounded-circle">
+                                    <img src="{{ url("storage/{$user->image}") }}" class="me-2 rounded-circle">
                                 @else
-                                <img src="{{ url("assets/img/icon_user.png") }}" alt="{{ $user->name }}" class="me-2 rounded-circle">
+                                <img src="{{ url("assets/img/icon_user.png") }}" class="me-2 rounded-circle">
                                 @endif
                                 {{ $user->name }}
                             </td>

@@ -15,17 +15,17 @@
                     <div class="col-lg-12">
                         <div class="mb-3">
                             <label">Categoria</label>
-                            <select class="form-select" name="categoria" id="categoria">
+                            <select class="form-select" name="documento" id="categoria">
                                 <option value="">Selecione o documento</option>
                                 @foreach ($categorias as $cats)
-                                    <option value="{{ $cats->id }}">{{ $cats->nome_doc }}</option>    
+                                    <option value="{{ $cats->nome_doc }}">{{ $cats->nome_doc }}</option>    
                                 @endforeach
                             </select>
                         </div>
                         <!-- Subcategoria -->
                         <div class="mb-3">
                             <label>Subcategoria</label>
-                            <select class="form-select" name="subcategoria" id="subcategoria">
+                            <select class="form-select" name="subdocumento" id="subdocumento">
                                 <option value="">Selecione a subcategoria</option>
                             </select>
                         </div>
@@ -89,14 +89,14 @@
                     document.getElementById('categoria').addEventListener('change', function() {
                         var categoriaSelecionada = this.value;
                         //console.log(categoriaSelecionada);
-                        fetch('{{ route("obtersubcategorias") }}?categoria_id=' + categoriaSelecionada)
+                        fetch('{{ route("obtersubcategorias") }}?nome_cat=' + categoriaSelecionada)
                             .then(function(response) {
                                 return response.json();
                             })
                             .then(function(data) {
-                                console.log(data); // Verifique a estrutura dos dados retornados
+                                //console.log(data); // Verifique a estrutura dos dados retornados
                 
-                                var subcategoriaSelect = document.getElementById('subcategoria');
+                                var subcategoriaSelect = document.getElementById('subdocumento');
                                 subcategoriaSelect.innerHTML = ''; // Limpa as opções existentes
                 
                                 // Adiciona a opção padrão
@@ -108,7 +108,7 @@
                                 // Adiciona as opções de subcategoria
                                 data.forEach(function(subcategoria) {
                                     var option = document.createElement('option');
-                                    option.value = subcategoria.id;
+                                    option.value = subcategoria.nome_subcat;
                                     option.textContent = subcategoria.nome_subcat; // Atribui o nome da subcategoria ao texto do option
                                     subcategoriaSelect.appendChild(option);
                                 });

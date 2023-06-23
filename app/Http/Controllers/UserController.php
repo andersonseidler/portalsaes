@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUpdateUserFormRequest;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -53,16 +54,11 @@ class UserController extends Controller
             alert()->error('Preencha o nome!');
         }
 
-        if($request->image){
-            // rodar o php artisan storage:link para criar um atalho da pasta storage dentro da pasta public
-            //$data['image'] = $request->image->store('users');
+        if ($request->image) {
             $extension = $request->image->getClientOriginalExtension();
             $data['image'] = $request->image->storeAs("users/{$request->name}", $request->name . ".{$extension}");
-            //dd($data['image']);
-        }else{
-            $data['image'] = $request->image->url("assets/img/icon_user.png");
         }
-
+        
         if($this->model->create($data)){
             alert()->success('Usuário cadastrado com sucesso!');
 

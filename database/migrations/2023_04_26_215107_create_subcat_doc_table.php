@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('sub_cat_docs', function (Blueprint $table) {
             $table->id();
             $table->string('nome_subcat');
+            $table->string('nome_cat');
             $table->integer('categoria_id');
             $table->timestamps();
         });

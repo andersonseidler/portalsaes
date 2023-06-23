@@ -17,6 +17,10 @@ class DocumentosController extends Controller
 
     public function index(Request $request){
 
+        $title = 'Excluir!';
+        $text = "Deseja excluir esse documento?";
+        confirmDelete($title, $text);
+
         $categorias = CatDoc::all();
         $docs = $this->model->getDocumentos(colaborador: $request->colaborador, documento: $request->documento ?? '');
         $users = User::all();
@@ -32,16 +36,34 @@ class DocumentosController extends Controller
     }
 
     public function store(Request $request){
-        $data = $request->all();
 
+        $data = $request->all();
+        //dd($data);
+        $extension = $request->arquivo->getClientOriginalExtension();
+
+        $data['arquivo'] = $request->arquivo->storeAs("documentos/{$request->colaborador}/" . "$request->documento-" . $request->subdocumento . ".{$extension}");
+        
         if($request->colaborador == ""){
             alert()->error('Selecione o colaborador!');
             return redirect()->route('documentos.index');
         }
 
-        alert()->success('Emprestimo cadastrado com sucesso!');
+        if($this->model->create($data)){
+            alert()->success('Emprestimo cadastrado com sucesso!');
 
-        return redirect()->route('documentos.index');
+            return redirect()->route('documentos.index');
+        }
         
+    }
+
+    public function destroy($id){
+        if(!$user = $this->model->find($id)){
+            return redirect()->route('documentos.index');
+        }
+        
+        if($user->delete()){
+            alert()->success('Documento excluído com sucesso!');
+        }
+        return redirect()->route('documentos.index');
     }
 }

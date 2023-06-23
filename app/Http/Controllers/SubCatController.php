@@ -33,6 +33,16 @@ class SubCatController extends Controller
     public function store(Request $request){
         $data = $request->all();
         //dd($data);
+        if($request->categoria_id == ""){
+            alert()->error('Selecione a categoria!');
+            
+            return redirect()->route('subcategory.index');
+        }
+        if($request->nome_subcat == ""){
+            alert()->error('Prencha a subcategoria!');
+            
+            return redirect()->route('subcategory.index');
+        }
         if($this->model->create($data)){
             alert()->success('Subcategoria cadastrada com sucesso!');
 
@@ -62,7 +72,7 @@ class SubCatController extends Controller
 
     public function destroy($id){
         if(!$doc = $this->model->find($id)){
-            alert()->error('Erro ao excluír o pagamento!');
+            alert()->error('Erro ao excluír a subcategoria!');
         }
         
         if($doc->delete()){
@@ -74,8 +84,8 @@ class SubCatController extends Controller
 
     public function obterSubcategorias(Request $request)
     {
-        $categoria = $request->input('categoria_id');
-        $subcategorias = SubCatDoc::where('categoria_id', $categoria)->get();
+        $categoria = $request->input('nome_cat');
+        $subcategorias = SubCatDoc::where('nome_cat', $categoria)->get();
 
         return response()->json($subcategorias);
     }

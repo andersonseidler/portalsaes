@@ -20,6 +20,7 @@ class Documento extends Model
     protected $fillable = [
         'colaborador',
         'documento',
+        'subdocumento',
         'arquivo',
     ];
 

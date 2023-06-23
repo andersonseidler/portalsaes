@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('colaborador');
             $table->string('documento');
+            $table->string('subdocumento');
             $table->string('arquivo');
             $table->timestamps();
         });

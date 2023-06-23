@@ -21,8 +21,11 @@
     <div class="col-xl-4 col-lg-5">
         <div class="card text-center">
             <div class="card-body">
-                <img src="storage/{{ auth()->user()->image }}" class="rounded-circle avatar-lg img-thumbnail" alt="profile-image">
-
+                @if(auth()->user()->image)
+                <img src="storage/{{ auth()->user()->image }}" class="rounded-circle avatar-lg img-thumbnail" alt="user-image">
+                @else
+                <img src="{{ url("assets/img/icon_user.png") }}" alt="" class="rounded-circle avatar-lg img-thumbnail">
+                @endif
                 <h4 class="mb-0 mt-2">{{ auth()->user()->name }}</h4>
                 <p class="text-muted font-14">{{ auth()->user()->cargo }}</p>
               

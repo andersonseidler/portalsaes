@@ -18,6 +18,7 @@ class SubCatDoc extends Model
      */
     protected $fillable = [
         'nome_subcat',
+        'nome_cat',
         'categoria_id',
     ];
 

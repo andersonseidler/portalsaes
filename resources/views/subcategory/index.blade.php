@@ -35,6 +35,7 @@
                     <table class="table table-centered table-nowrap table-hover mb-0">
                         <thead>
                             <tr>
+                                <th>Categoria</th>
                                 <th>Subcategoria</th>
                                 <th>Cadastrado em</th>
                                 <th>Ações</th>
@@ -44,12 +45,13 @@
                         <tbody>
                             @foreach ($subs as $sub)
                                 <tr>
+                                    <td>{{ $sub->nome_cat }}</td>
                                     <td>{{ $sub->nome_subcat }}</td>
                                     <td>{{ Carbon\Carbon::parse($sub->create_at)->format('d/m') }}</td>
                                     <td class="table-action">
                                         <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#standard-modal-edit" 
                                         data-subegory-id="{{ $sub->id }}" data-nome-doc="{{ $sub->nome_subcat }}"><i class="mdi mdi-pencil"></i></button>
-                                        <a href="{{ route('category.destroy', $sub->id) }}"
+                                        <a href="{{ route('subcategory.destroy', $sub->id) }}"
                                             class="action-icon mdi mdi-delete" data-confirm-delete="true"></a>
                                     </td>
                                 </tr>

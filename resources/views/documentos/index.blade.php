@@ -31,7 +31,7 @@
             @endif --}}
             <div class="col-sm-12">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h4 class="header-title">Emprestimos lançados</h4>
+                    <h4 class="header-title"></h4>
                     <div class="dropdown">
                         <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
                             data-bs-target="#standard-modal">Cadastrar</button>
@@ -45,6 +45,8 @@
                             <tr>
                                 <th>Colaborador</th>
                                 <th>Documento</th>
+                                <th>Categoria</th>
+                                <th>Dada cadastro</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
@@ -54,10 +56,15 @@
                                 <tr>
                                     <td>{{ $doc->colaborador }}</td>
                                     <td>{{ $doc->documento }}</td>
+                                    <td>{{ $doc->subdocumento }}</td>
                                     <td>{{ Carbon\Carbon::parse($doc->create_at)->format('d/m') }}</td>
                                     <td class="table-action">
-                                        <a href="{{ route('parcelas.show', $doc->id) }}" class="action-icon"> <i
-                                                class="mdi mdi-eye"></i></a>
+                                        <a href="storage/{{ $doc->arquivo }}" class="action-icon" download> <i
+                                                class="mdi mdi-download"></i></a>
+                                        <a href="storage/{{ $doc->arquivo }}" class="action-icon" target="blank"> <i
+                                                class="mdi mdi-printer"></i></a>
+                                        <a href="{{ route('documentos.destroy', $doc->id) }}"
+                                            class="action-icon mdi mdi-delete" data-confirm-delete="true"></a>
                                     </td>
                                 </tr>
                             @endforeach

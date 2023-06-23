@@ -50,6 +50,7 @@ Route::middleware(['auth'])->group(function () {
     //SUBSCATEGORIAS
     Route::get('/obtersubcategorias', [SubCatController::class, 'obterSubcategorias'])->name('obtersubcategorias');
     
+    Route::delete('/subcategorias/{id}', [SubCatController::class, 'destroy'])->name('subcategory.destroy');
     Route::get('/subcategorias/create', [SubCatController::class, 'create'])->name('subcategory.create');
     Route::get('/subcategorias', [SubCatController::class, 'index'])->name('subcategory.index');
     Route::post('/subcategorias', [SubCatController::class, 'store'])->name('subcategory.store');
@@ -72,6 +73,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/emprestimos', [EmprestimosController::class, 'store'])->name('emprestimos.store');
 
     //DOCUMENTOS
+    Route::delete('/documentos/{id}', [DocumentosController::class, 'destroy'])->name('documentos.destroy');
     Route::get('/documentos', [DocumentosController::class, 'index'])->name('documentos.index');
     Route::post('/documentos', [DocumentosController::class, 'store'])->name('documentos.store');
 
