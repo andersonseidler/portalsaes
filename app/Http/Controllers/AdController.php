@@ -7,11 +7,11 @@ use App\Mail\SendEmail;
 use App\Models\Adiantamento;
 use Illuminate\Http\Request;
 use App\Models\User;
+use setasign\Fpdi\PdfParser\StreamReader;
 use setasign\Fpdi\Fpdi;
-use Spatie\PdfToText\Pdf;
 use Smalot\PdfParser\Parser;
-use mikehaertl\pdftk\Pdf as PdfTest;
 
+use setasign\Fpdi\PdfParser\PdfParser;
 
 class AdController extends Controller
 {   
@@ -158,22 +158,43 @@ class AdController extends Controller
 
 public function lerConteudoPDF(Request $request)
 {
-    $arquivo = $request->path;
+    $arquivo = $request->file('path');
+    $palavraProcurada = 'Fernando';
+
     $parser = new Parser();
-    $pdf = $parser->parseFile($arquivo);
+    $pdf = $parser->parseFile($arquivo->getPathname());
 
-$text = $pdf->getText();
+    $pages = $pdf->getPages();
+    $paginaEncontrada = null;
 
-$palavraProcurada = 'Anderson';
+    foreach ($pages as $numeroPagina => $pagina) {
+        $text = $pagina->getText();
 
-    if (strpos($text, $palavraProcurada) !== false) {
-        dividirPDF($arquivo);
+        if (strpos($text, $palavraProcurada) !== false) {
+            $paginaEncontrada = $numeroPagina + 1;
+            break;
+        }
+    }
+
+    if ($paginaEncontrada !== null) {
+        $pdf = new Fpdi();
+        $pdf->setSourceFile($arquivo->getPathname());
+        $templateId = $pdf->importPage($paginaEncontrada);
+        $pdf->AddPage();
+        $pdf->useTemplate($templateId);
+
+        // Gerar o conteúdo do novo PDF
+        ob_start();
+        $pdf->Output();
+        $conteudoPdf = ob_get_clean();
+
+        // Definir o cabeçalho Content-Type para PDF
+        header('Content-Type: application/pdf');
+
+        // Exibir o PDF na página
+        echo $conteudoPdf;
     } else {
-        echo "A palavra '$palavraProcurada' não foi encontrada no conteúdo do PDF.";
+        echo "A palavra '$palavraProcurada' não foi encontrada no PDF.";
     }
 }
-
-
-
-
 }
