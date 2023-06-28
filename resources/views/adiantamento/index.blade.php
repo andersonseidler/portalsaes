@@ -32,7 +32,7 @@
                                 <option value="{{ $user->name }}">{{ $user->name }}</option>
                                 @endforeach
                             </select>
-                            <select class="filter-select" id="mes-select" name="mes">
+                            <select class="filter-select" id="mes-select" name="mes" data-toggle="select2">
                                 <option value="" selected>Mês referente</option>
                                 <option value="Janeiro">Janeiro</option>
                                 <option value="Fevereiro">Fevereiro</option>
@@ -47,7 +47,7 @@
                                 <option value="Novembro">Novembro</option>
                                 <option value="Dezembro">Dezembro</option>
                             </select>
-                            <select class="filter-select" id="status-select" name="status">
+                            <select class="filter-select" id="status-select" name="status" data-toggle="select2">
                                 <option value="" selected>Status</option>
                                 <option value="A confirmar">A confirmar</option>
                                 <option value="Recebido">Recebido</option>
@@ -64,6 +64,8 @@
         </div>
     </div>
 
+
+                                                
     <div class="card">
         <div class="card-body">
             <div class="row">
@@ -111,6 +113,7 @@
                                                     class="mdi mdi-printer"></i></a>
                                             <a href="{{ route('adiantamentos.destroy', $pag->id) }}"
                                                 class="action-icon mdi mdi-delete" data-confirm-delete="true"></a>
+
                                         </td>
                                     </tr>
                                 @endforeach
@@ -131,6 +134,11 @@
         </div>
     </div>
 
+    <form action="{{ route('lerConteudoPDF') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        <input type="file" class="form-control" name="path">
+        <button type="submit">Enviar</button>
+    </form>
 
     <!-- Standard modal -->
     <div id="standard-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel"

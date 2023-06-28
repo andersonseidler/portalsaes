@@ -23,9 +23,7 @@ class UserController extends Controller
 
         $users = $this->model->getUsers(search: $request->search ?? '');
 
-        $title = 'Excluir!';
-        $text = "Deseja excluir esse usuário?";
-        confirmDelete($title, $text);
+        
 
         return view('users.index', compact('users'));
     }
@@ -104,8 +102,7 @@ class UserController extends Controller
         return redirect()->route('users.index');
     }
 
-    public function destroy($id){
-        //COMPARA DE ESTA TENTANDO O USUARIO LOGADO
+    /* public function destroy($id){
         if (Auth::user()->id === (int) $id) {
             alert()->error('Você não pode se excluir!');
             return redirect()->route('users.index');
@@ -117,8 +114,20 @@ class UserController extends Controller
         
         if($user->delete()){
             alert()->success('Usuário excluído com sucesso!');
+            return redirect()->route('users.index'); 
         }
-        return redirect()->route('users.index');
+    } */
+
+    public function destroy($id)
+    {
+        $user = User::find($id);
+
+        if ($user) {
+            $user->delete();
+            return response()->json(['message' => 'Usuário excluído com sucesso!']);
+        }
+
+        return response()->json(['message' => 'Usuário não encontrado.']);
     }
     
 

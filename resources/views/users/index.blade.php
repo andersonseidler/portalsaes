@@ -37,127 +37,63 @@
             </div>
         </div>
         <br>
-        <div class="row">
-            <div class="col-sm-12">
-                <table class="table table-striped table-centered mb-0">
-                    <thead>
-                        <tr>
-                            {{-- <th><input type="checkbox" name="" id="select_all_ids"></th> --}}
-                            <th>Nome</th>
-                            <th>E-mail</th>
-                            <th>Telefone</th>
-                            <th>Perfil</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($users as $user)
-                        <tr id="employee_ids{{ $user->id }}">
-                            {{-- <td><input type="checkbox" name="ids" class="checkbox_ids" value="{{$user->id}}"></td> --}}
-                            <td class="table-user">
-                                @if($user->image)
-                                    <img src="{{ url("storage/{$user->image}") }}" class="me-2 rounded-circle">
-                                @else
-                                <img src="{{ url("assets/img/icon_user.png") }}" class="me-2 rounded-circle">
-                                @endif
-                                {{ $user->name }}
-                            </td>
-                            <td>{{ $user->email }}</td>
-                            <td>{{ $user->telefone }}</td>
-                            <td>{{ $user->perfil }}</td>
-                            <td class="table-action">
-                                <a href="{{ route('users.show', $user->id) }}" class="action-icon"> <i class="mdi mdi-eye"></i></a>
-                                <a href="{{ route('users.edit', $user->id) }}" class="action-icon"> <i class="mdi mdi-pencil"></i></a>
-                                <a href="{{ route('users.destroy', $user->id) }}" class="action-icon mdi mdi-delete" data-confirm-delete="true"></a>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <br>
-        <div class="row">
-            {{ $users->appends([
-                'search' => request()->get('search', '')
-            ])->links('components.pagination') }}
-        </div>
+        @include('users._partials.list-usuarios')
     
-        <script>
-            $(function(e){
-                $("#select_all_ids").click(function(){
-                    $('.checkbox_ids').prop('checked',$(this).prop('checked'));
-                    
-                    // Verificar se o checkbox está marcado
-                    if ($(this).prop('checked')) {
-                    // Adicionar uma classe ao botão quando o checkbox estiver marcado
-                        $('#deleteAllSelectedRecord').removeClass('btn btn-secondary');
-                        $('#deleteAllSelectedRecord').addClass('btn btn-danger');
-                        $('#deleteAllSelectedRecord').prop('disabled', false);
-                    } else {
-                    // Remover a classe do botão quando o checkbox estiver desmarcado
-                        $('#deleteAllSelectedRecord').removeClass('btn btn-danger');
-                        $('#deleteAllSelectedRecord').addClass('btn btn-secondary');
-                        $('#deleteAllSelectedRecord').prop('disabled', true);
-                        
-                    }
-                });
-        
-                $(".checkbox_ids").click(function(){
-                    // Verificar se o checkbox está marcado
-                    if ($('.checkbox_ids:checked').length > 0) {
-                    // Adicionar uma classe ao botão quando o checkbox estiver marcado
-                        $('#deleteAllSelectedRecord').removeClass('btn btn-secondary');
-                        $('#deleteAllSelectedRecord').addClass('btn btn-danger');
-                        $('#deleteAllSelectedRecord').prop('disabled', false);
-                    } else {
-                    // Remover a classe do botão quando o checkbox estiver desmarcado
-                        $('#deleteAllSelectedRecord').removeClass('btn btn-danger');
-                        $('#deleteAllSelectedRecord').addClass('btn btn-secondary');
-                        $('#deleteAllSelectedRecord').prop('disabled', true);
-                        
-                    }
-                });
-        
-                $('#deleteAllSelectedRecord').click(function(e){
-                    e.preventDefault();
-                    var all_ids = [];
-                    $('input:checkbox[name=ids]:checked').each(function(){
-                        all_ids.push($(this).val());
-                    });
-        
-                    Swal.fire({
-                        title: 'Excluír',
-                        text: `Deseja excluir os usuários selecionados?`,
-                        icon: 'question',
-                        showCancelButton: true,
-                        confirmButtonText: 'Sim',
-                        cancelButtonText: 'Cancelar'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            $.ajax({
-                                url: "{{ route('users.delete') }}",
-                                type: "DELETE",
-                                data:{
-                                    ids:all_ids,
-                                    _token: '{{ csrf_token() }}'
-                                },
-                        success:function(response){
-                            $.each(all_ids,function(key,val){
-                                $('#employee_ids'+val).remove();
-                                if (response.success) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Successo',
-                                    text: response.message
-                                    });
-                                } 
-                                })
-                            }
-                        });
-                        }
-                    });
-                });
+
+
+<script>
+    const deleteLinks = document.querySelectorAll('.delete-user');
+    
+    const handleDeleteUser = (event) => {
+      event.preventDefault();
+    
+      const deleteUrl = event.target.href;
+    
+      Swal.fire({
+        title: 'Excluír',
+        text: 'Tem certeza que deseja excluir esse usuário?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Sim',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          fetch(deleteUrl, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            }
+          })
+            .then(response => response.json())
+            .then(data => {
+              if (data.message) {
+                Swal.fire('Sucesso', data.message, 'success');
+    
+                const deletedRow = event.target.closest('tr');
+                deletedRow.remove();
+    
+                // Atualizar a lista de registros via AJAX
+                fetch('{{ route('users.index') }}')
+                  .then(response => response.text())
+                  .then(html => {
+                    const tableContainer = document.getElementById('table-container');
+                    tableContainer.innerHTML = html;
+                  })
+                  .catch(error => {
+                    console.error('Ocorreu um erro:', error);
+                  });
+              }
+            })
+            .catch(error => {
+              console.error('Ocorreu um erro:', error);
             });
-        </script>
+        }
+      });
+    };
+    
+    deleteLinks.forEach(link => {
+      link.addEventListener('click', handleDeleteUser);
+    });
+    </script>
 @endsection

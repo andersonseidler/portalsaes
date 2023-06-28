@@ -33,7 +33,7 @@
 
         <!--  Select2 Js -->
         <script src="{{ url('assets/vendor/select2/js/select2.min.js')}}"></script>
-
+        <link href="assets/vendor/fullcalendar/main.min.css" rel="stylesheet" type="text/css">
         
         <style>
             
@@ -128,6 +128,7 @@
         <script src="{{ url('assets/js/ui/component.fileupload.js') }}"></script>
         <!-- App js -->
         <script src="{{ url('assets/js/app.min.js') }}"></script>
-
+        <script src="assets/vendor/fullcalendar/main.min.js"></script>
+        <script src="assets/js/pages/demo.calendar.js"></script>
     </body>
 </html> 

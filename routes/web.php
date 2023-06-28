@@ -6,10 +6,12 @@ use App\Http\Controllers\EmprestimosController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DocumentosController;
 use App\Http\Controllers\AdController;
+use App\Http\Controllers\ApiController;
 use App\Http\Controllers\PgController;
 use App\Http\Controllers\CategoriasController;
 use App\Http\Controllers\SubCatController;
 use App\Http\Controllers\DashController;
+use App\Http\Controllers\CalendarController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -26,9 +28,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
 
     //ADIANTAMENTO
+    Route::POST('/lerConteudoPDF', [AdController::class, 'lerConteudoPDF'])->name('lerConteudoPDF');
     Route::delete('/adiantamento', [AdController::class, 'deleteAll'])->name('adiantamento.delete');
     Route::delete('/adiantamento/{id}', [AdController::class, 'destroy'])->name('adiantamentos.destroy');
     Route::get('/adiantamento/create', [AdController::class, 'create'])->name('adiantamento.create');
+    
     Route::get('/adiantamento', [AdController::class, 'index'])->name('adiantamento.index');
     Route::post('/adiantamento', [AdController::class, 'store'])->name('adiantamento.store');
 
@@ -56,7 +60,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/subcategorias', [SubCatController::class, 'store'])->name('subcategory.store');
 
     
-    Route::post('getContatos', 'DashboardController@getContatos')->name('users.getContatos');
+    //Route::post('getContatos', 'DashboardController@getContatos')->name('users.getContatos');
 
     //DASHBOARD
     Route::get('/dashboard', [DashController::class, 'index'])->name('dashboard.index');
@@ -81,9 +85,12 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/parcelas/delete/{id}', [ParcelaController::class, 'destroy'])->name('parcelas.destroy');
     Route::put('/parcelas/confirm/{id}', [ParcelaController::class, 'update'])->name('parcelas.update');
     Route::get('/parcelas/{id}', [ParcelaController::class, 'show'])->name('parcelas.show');
+
+
+    Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
 });
 
-
+Route::get('/api', [ApiController::class, 'index']);
 
 Route::get('/', function () {
     return view('auth.login');

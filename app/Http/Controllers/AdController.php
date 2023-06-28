@@ -7,7 +7,11 @@ use App\Mail\SendEmail;
 use App\Models\Adiantamento;
 use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Mail;
+use setasign\Fpdi\Fpdi;
+use Spatie\PdfToText\Pdf;
+use Smalot\PdfParser\Parser;
+use mikehaertl\pdftk\Pdf as PdfTest;
+
 
 class AdController extends Controller
 {   
@@ -30,6 +34,12 @@ class AdController extends Controller
         $title = 'Excluir!';
         $text = "Deseja excluir esse adiantamento?";
         confirmDelete($title, $text);
+        
+
+        /* $text = (new Pdf('/usr/bin/pdftotext'))
+            ->setPdf('pdf_dividido/Google.pdf')
+            ->text(); */
+
         return view('adiantamento.index', compact('pags','users'));
     }
 
@@ -41,6 +51,13 @@ class AdController extends Controller
     public function store(Request $request){
         $data = $request->all();
         //dd($data);
+        $caminhoArquivoPDF = $request->file('arquivo')->path();
+        //dd($caminhoArquivoPDF);
+        $diretorioDividido = $this->dividirPDF($caminhoArquivoPDF);
+        //dd($diretorioDividido);
+        //$data['arquivo'] = $diretorioDividido;
+        
+        //dd($ler);
         $extension = $request->arquivo->getClientOriginalExtension();
 
         if($extension == ""){
@@ -62,6 +79,7 @@ class AdController extends Controller
         }else{
             
             $data['arquivo'] = $request->arquivo->storeAs('contracheques', 'adiantamento-' . $request->colaborador . ".{$extension}");
+            
         }
         
         //Mail::to( config('mail.from.address'))->send(new SendEmail($data));
@@ -93,4 +111,69 @@ class AdController extends Controller
       ]);
         
     }
+
+    public function dividirPDF($caminhoArquivoPDF)
+{
+    // Verifica se o caminho fornecido é um arquivo válido
+    if (!is_file($caminhoArquivoPDF)) {
+        // O caminho não é um arquivo válido
+        // Tratar o erro ou exibir uma mensagem adequada
+        return null;
+    }
+
+    // Define o diretório de destino para os arquivos divididos
+    $diretorioDestino = public_path('pdf_dividido');
+
+    // Verifica se o diretório de destino existe, senão cria
+    if (!file_exists($diretorioDestino)) {
+        mkdir($diretorioDestino, 0777, true);
+    }
+
+    // Carrega o arquivo PDF
+    $pdf = new Fpdi();
+    $totalPaginas = $pdf->setSourceFile($caminhoArquivoPDF);
+
+    // Divide as páginas em arquivos individuais
+    for ($pagina = 1; $pagina <= $totalPaginas; $pagina++) {
+        $pdf->AddPage();
+        $importedPage = $pdf->importPage($pagina);
+        $pdf->useTemplate($importedPage);
+
+        $nomeArquivo = 'pagina_' . $pagina . '.pdf';
+        $caminhoArquivo = $diretorioDestino . '/' . $nomeArquivo;
+
+        $pdf->Output($caminhoArquivo, 'F');
+        // Fecha o documento atual
+        $pdf->close();
+
+        // Inicializa um novo objeto FPDI para a próxima página
+        $pdf = new Fpdi();
+        $pdf->setSourceFile($caminhoArquivoPDF);
+    }
+
+    // Retorna o diretório dos arquivos PDF gerados
+    return $diretorioDestino;
+}
+
+
+public function lerConteudoPDF(Request $request)
+{
+    $arquivo = $request->path;
+    $parser = new Parser();
+    $pdf = $parser->parseFile($arquivo);
+
+$text = $pdf->getText();
+
+$palavraProcurada = 'Anderson';
+
+    if (strpos($text, $palavraProcurada) !== false) {
+        dividirPDF($arquivo);
+    } else {
+        echo "A palavra '$palavraProcurada' não foi encontrada no conteúdo do PDF.";
+    }
+}
+
+
+
+
 }
