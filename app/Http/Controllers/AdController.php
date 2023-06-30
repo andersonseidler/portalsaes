@@ -7,10 +7,11 @@ use App\Mail\SendEmail;
 use App\Models\Adiantamento;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use setasign\Fpdi\PdfParser\StreamReader;
 use setasign\Fpdi\Fpdi;
 use Smalot\PdfParser\Parser;
-
+use Carbon\Carbon;
 use setasign\Fpdi\PdfParser\PdfParser;
 
 class AdController extends Controller
@@ -21,6 +22,7 @@ class AdController extends Controller
     public function __construct(Adiantamento $pag)
     {
         $this->model = $pag;
+        Carbon::setLocale('pt_BR');
     }
 
     public function index(Request $request){
@@ -50,7 +52,7 @@ class AdController extends Controller
     
     public function store(Request $request){
         $data = $request->all();
-        //dd($data);
+        dd($data);
         $caminhoArquivoPDF = $request->file('arquivo')->path();
         //dd($caminhoArquivoPDF);
         $diretorioDividido = $this->dividirPDF($caminhoArquivoPDF);
@@ -156,45 +158,109 @@ class AdController extends Controller
 }
 
 
-public function lerConteudoPDF(Request $request)
-{
+public function cadastrarDadosEPdfPorUsuario(Request $request){
+    // Obter o arquivo PDF
     $arquivo = $request->file('path');
-    $palavraProcurada = 'Fernando';
-
+    
+    // Realizar o parsing do arquivo PDF
     $parser = new Parser();
     $pdf = $parser->parseFile($arquivo->getPathname());
 
-    $pages = $pdf->getPages();
-    $paginaEncontrada = null;
+    // Array para armazenar os usuários encontrados
+    $usuarios = [];
+    // Percorrer as páginas do PDF
+    foreach ($pdf->getPages() as $numeroPagina => $pagina) {
+        // Obter o texto da página
+        $textoPagina = $pagina->getText();
 
-    foreach ($pages as $numeroPagina => $pagina) {
-        $text = $pagina->getText();
+        
+        // Extrair o nome do usuário do texto da página
+        $nomeUsuario = $this->extrairNomeUsuario($textoPagina);
+        $emailUsuario = $this->extrairEmailUsuario($nomeUsuario);
+        $fotoUsuario = $this->extrairFotoUsuario($nomeUsuario);
+        $dataAtual = Carbon::now();
+        $numeroMes = $dataAtual->format('m');
+        $mes = $request->mes;
+        $diretorioDestino = $nomeUsuario;
 
-        if (strpos($text, $palavraProcurada) !== false) {
-            $paginaEncontrada = $numeroPagina + 1;
-            break;
+        // Verifica se o diretório de destino existe, senão cria
+        if (!file_exists($diretorioDestino)) {
+            mkdir($diretorioDestino, 0777, true);
+        }
+        //dd($numeroMes);
+        if (!empty($nomeUsuario)) {
+            $usuarios[] = $nomeUsuario;
+            // Dividir a página em um novo arquivo PDF
+            $novoPDF = new Fpdi();
+            $novoPDF->AddPage();
+            $novoPDF->setSourceFile($arquivo->getPathname());
+            $novoPDF->useTemplate($novoPDF->importPage($numeroPagina + 1));
+
+            // Gerar um nome único para o novo arquivo
+$nomeArquivo = 'arquivo_' . ($numeroPagina + 1) . '.pdf';
+
+// Criar o diretório com o nome do usuário dentro da pasta 'pdf_dividido'
+$pastaDestino = $nomeUsuario; // Substitua pelo nome do usuário
+$pastaUsuario = storage_path("app/public/$nomeUsuario/Adiantamento/$mes");
+if (!file_exists($pastaUsuario)) {
+    mkdir($pastaUsuario, 0777, true);
+}
+
+// Salvar o novo arquivo dentro da pasta do usuário
+$caminhoArquivo = $pastaUsuario . '/' . $nomeArquivo;
+$novoPDF->Output($caminhoArquivo, 'F');
+
+            //dd($emailUsuario);
+            $adiantamento = new Adiantamento();
+            $adiantamento->colaborador = $nomeUsuario;
+            $adiantamento->arquivo = $caminhoArquivo;
+            $adiantamento->foto = $fotoUsuario;
+            $adiantamento->email = $emailUsuario;
+            $adiantamento->numeromes = $numeroMes;
+            $adiantamento->mes = $mes;
+            $adiantamento->status = "PENDENTE";
+            $adiantamento->class_status = "badge badge-outline-warning";
+            //dd($adiantamento->mes);
+            $adiantamento->save();
+
+            
         }
     }
 
-    if ($paginaEncontrada !== null) {
-        $pdf = new Fpdi();
-        $pdf->setSourceFile($arquivo->getPathname());
-        $templateId = $pdf->importPage($paginaEncontrada);
-        $pdf->AddPage();
-        $pdf->useTemplate($templateId);
-
-        // Gerar o conteúdo do novo PDF
-        ob_start();
-        $pdf->Output();
-        $conteudoPdf = ob_get_clean();
-
-        // Definir o cabeçalho Content-Type para PDF
-        header('Content-Type: application/pdf');
-
-        // Exibir o PDF na página
-        echo $conteudoPdf;
-    } else {
-        echo "A palavra '$palavraProcurada' não foi encontrada no PDF.";
+    if($adiantamento->save()){
+        alert()->success('Contracheques cadastrados com sucesso!');
+        return redirect()->route('adiantamento.index');
     }
 }
+
+private function extrairNomeUsuario($textoPagina)
+{
+    // Suposição: O nome do usuário está precedido pela palavra "Nome:" ou "Nome do usuário:"
+    $padroes = ['/Nome\s*(\w+)/', '/Nome do usuário:\s*(\w+)/'];
+
+    foreach ($padroes as $padrao) {
+        if (preg_match($padrao, $textoPagina, $matches)) {
+            // O nome do usuário foi encontrado
+            return $matches[1];
+        }
+    }
+
+    // Caso nenhum nome de usuário seja encontrado
+    return '';
+}
+
+private function extrairEmailUsuario($nomeUsuario){
+
+    $emailUsuario = User::where('name', $nomeUsuario)->pluck('email')->first();
+
+    return $emailUsuario;
+}
+
+private function extrairFotoUsuario($nomeUsuario){
+
+    $fotoUsuario = User::where('name', $nomeUsuario)->pluck('image')->first();
+
+    return $fotoUsuario;
+}
+
 }

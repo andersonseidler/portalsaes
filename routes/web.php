@@ -28,6 +28,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
 
     //ADIANTAMENTO
+    Route::POST('/cadastrarDadosEPdfPorUsuario', [AdController::class, 'cadastrarDadosEPdfPorUsuario'])->name('cadastrarDadosEPdfPorUsuario');
     Route::POST('/lerConteudoPDF', [AdController::class, 'lerConteudoPDF'])->name('lerConteudoPDF');
     Route::delete('/adiantamento', [AdController::class, 'deleteAll'])->name('adiantamento.delete');
     Route::delete('/adiantamento/{id}', [AdController::class, 'destroy'])->name('adiantamentos.destroy');
