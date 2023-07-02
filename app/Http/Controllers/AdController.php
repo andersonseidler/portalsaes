@@ -93,18 +93,43 @@ class AdController extends Controller
             return redirect()->route('adiantamento.index');
         }
     }
-
-    public function destroy($id){
-        if(!$pag = $this->model->find($id)){
-            alert()->error('Erro ao excluír o adiantamento!');
-        }
+    //$caminhoArquivo = "usuarios/$adiantamento->colaborador/Adiantamento/$adiantamento->mes" . $adiantamento->arquivo;
+    public function destroy($id)
+{
+    $pag = $this->model;
+    
+    $adiantamento = $pag->find($id);
+    
+    if (!$adiantamento) {
+        alert()->error('Erro ao excluir o adiantamento!');
+    } else {
+        // Caminho do arquivo
+        $caminhoArquivo = str_replace('/var/www/storage/app/public/', '', $adiantamento->arquivo);
         
-        if($pag->delete()){
+        // Caminho absoluto do diretório de armazenamento público
+        //$caminhoDiretorioPublico = public_path('storage');
+        
+        // Caminho absoluto do arquivo
+        //$caminhoAbsoluto = $caminhoDiretorioPublico . '/' . $caminhoArquivo;
+        
+        // Debug: Imprimir o caminho absoluto do arquivo
+        //dd($caminhoArquivo, $caminhoAbsoluto);
+        
+        if (Storage::disk('public')->exists($caminhoArquivo)) {
+            // Exclui o arquivo do diretório
+            Storage::disk('public')->delete($caminhoArquivo);
+            
+            // Exclui o registro do adiantamento
+            $adiantamento->delete();
+            
             alert()->success('Adiantamento excluído com sucesso!');
+        } else {
+            alert()->error('Arquivo não encontrado!');
         }
-
-        return redirect()->route('adiantamento.index');
     }
+
+    return redirect()->route('adiantamento.index');
+}
 
     public function deleteAll(Request $request){
         $ids = $request->ids;
