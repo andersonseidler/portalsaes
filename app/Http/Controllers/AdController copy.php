@@ -12,8 +12,6 @@ use setasign\Fpdi\PdfParser\StreamReader;
 use setasign\Fpdi\Fpdi;
 use Smalot\PdfParser\Parser;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
 use setasign\Fpdi\PdfParser\PdfParser;
 
 class AdController extends Controller
@@ -162,13 +160,12 @@ class AdController extends Controller
 
 public function cadastrarDadosEPdfPorUsuario(Request $request){
     // Obter o arquivo PDF
-    //$arquivo = $request->file('arquivo');
-    $arquivo = $request->file('arquivo')->getRealPath();
+    $arquivo = $request->file('path');
+    
     // Realizar o parsing do arquivo PDF
     $parser = new Parser();
-    $pdf = $parser->parseFile($arquivo);
-    //dd($pdf);
-    $extension = $request->arquivo->getClientOriginalExtension();
+    $pdf = $parser->parseFile($arquivo->getPathname());
+
     // Array para armazenar os usuários encontrados
     $usuarios = [];
     // Percorrer as páginas do PDF
@@ -196,29 +193,25 @@ public function cadastrarDadosEPdfPorUsuario(Request $request){
             // Dividir a página em um novo arquivo PDF
             $novoPDF = new Fpdi();
             $novoPDF->AddPage();
-            $novoPDF->setSourceFile($arquivo);
+            $novoPDF->setSourceFile($arquivo->getPathname());
             $novoPDF->useTemplate($novoPDF->importPage($numeroPagina + 1));
 
             // Gerar um nome único para o novo arquivo
             $nomeArquivo = 'arquivo_' . $dataAtual . '.pdf';
 
-// Criar o diretório com o nome do usuário dentro da pasta 'pdf_dividido'
-$pastaUsuario = "usuarios/{$nomeUsuario}/Adiantamento/{$mes}";
+            // Criar o diretório com o nome do usuário dentro da pasta 'pdf_dividido'
+            $pastaDestino = $nomeUsuario; // Substitua pelo nome do usuário
+            $pastaUsuario = storage_path("$nomeUsuario/Adiantamento/$mes");
+            dd($pastaUsuario);
+            if (!file_exists($pastaUsuario)) {
+                mkdir($pastaUsuario, 0777, true);
+            }
 
-// Verificar se o diretório de destino existe, senão criar
-if (!File::exists(storage_path("app/public/{$pastaUsuario}"))) {
-    File::makeDirectory(storage_path("app/public/{$pastaUsuario}"), 0777, true);
-}
+            // Salvar o novo arquivo dentro da pasta do usuário
+            $caminhoArquivo = $pastaUsuario . '/' . $nomeArquivo;
+            $novoPDF->Output($caminhoArquivo, 'F');
 
-// Caminho da pasta de destino relativo à pasta "public"
-$caminhoDestinoRelativo = "usuarios/{$nomeUsuario}/Adiantamento/{$mes}";
-
-// Caminho completo do arquivo
-$caminhoArquivo = storage_path("app/public/{$caminhoDestinoRelativo}/{$nomeArquivo}");
-//dd($caminhoArquivo);
-$novoPDF->Output($caminhoArquivo, 'F');
-
-
+            //dd($emailUsuario);
             $adiantamento = new Adiantamento();
             $adiantamento->colaborador = $nomeUsuario;
             $adiantamento->arquivo = $caminhoArquivo;

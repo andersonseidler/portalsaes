@@ -109,7 +109,7 @@
                                         <td class="table-action">
                                             <a href="storage/{{ $pag->arquivo }}" class="action-icon" download> <i
                                                     class="mdi mdi-download"></i></a>
-                                            <a href="storage/{{ $pag->arquivo }}" class="action-icon" target="blank"> <i
+                                            <a href="{{ str_replace('/var/www/storage/app/public/', 'storage/', $pag->arquivo) }}" class="action-icon" target="blank"> <i
                                                     class="mdi mdi-printer"></i></a>
                                             <a href="{{ route('adiantamentos.destroy', $pag->id) }}"
                                                 class="action-icon mdi mdi-delete" data-confirm-delete="true"></a>
@@ -151,7 +151,7 @@
             <option value="Novembro">Novembro</option>
             <option value="Dezembro">Dezembro</option>
         </select>
-        <input type="file" class="form-control" name="path">
+        <input type="file" class="form-control" name="arquivo">
         <button type="submit">Enviar</button>
     </form>
 
