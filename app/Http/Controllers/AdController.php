@@ -159,6 +159,7 @@ class AdController extends Controller
         }
         
     }
+    /* Testes */
     public function destroy($id){
         $pag = $this->model;
         
