@@ -29,7 +29,7 @@ Route::middleware(['auth'])->group(function () {
 
     //ADIANTAMENTO
     Route::POST('/cadastrarDadosEPdfPorUsuario', [AdController::class, 'cadastrarDadosEPdfPorUsuario'])->name('cadastrarDadosEPdfPorUsuario');
-    Route::POST('/lerConteudoPDF', [AdController::class, 'lerConteudoPDF'])->name('lerConteudoPDF');
+    //Route::POST('/lerConteudoPDF', [AdController::class, 'lerConteudoPDF'])->name('lerConteudoPDF');
     Route::delete('/adiantamento', [AdController::class, 'deleteAll'])->name('adiantamento.delete');
     Route::delete('/adiantamento/{id}', [AdController::class, 'destroy'])->name('adiantamentos.destroy');
     Route::get('/adiantamento/create', [AdController::class, 'create'])->name('adiantamento.create');

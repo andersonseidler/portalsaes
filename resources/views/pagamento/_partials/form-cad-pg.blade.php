@@ -5,6 +5,7 @@
                             <label">Nome</label>
                             <select class="form-select" name="colaborador" id="usuario">
                                 <option value="">Selecione o colaborador</option>
+                                <option value="Todos">Todos</option>
                                 @foreach ($users as $user)
                                 <option value="{{ $user->name }}" data-price="{{ $user->email }}" data-img="{{ $user->image }}">{{ $user->name }}</option>    
                                 @endforeach
@@ -13,12 +14,8 @@
                               </select>
                         </div>
                     </div>
-                    <div class="col-lg-12">
-                        <div class="mb-3">
-                            <label">E-mail</label>
-                            <input type="text" class="form-control" name="email" id="idEmail">
-                        </div>
-                    </div>
+                            <input type="hidden" class="form-control" name="email" id="idEmail">
+
                     <div class="col-lg-12">
                         <div class="mb-3">
                             <label">Mês referente</label>

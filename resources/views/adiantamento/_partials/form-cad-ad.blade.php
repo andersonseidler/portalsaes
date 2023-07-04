@@ -5,20 +5,15 @@
                             <label">Nome</label>
                             <select class="form-select" name="colaborador" id="usuario">
                                 <option value="">Selecione o colaborador</option>
+                                <option value="Todos">Todos</option>
                                 @foreach ($users as $user)
                                 <option value="{{ $user->name }}" data-price="{{ $user->email }}" data-img="{{ $user->image }}">{{ $user->name }}</option>    
                                 @endforeach
-                                
-                                
                               </select>
                         </div>
                     </div>
-                    <div class="col-lg-12">
-                        <div class="mb-3">
-                            <label">E-mail</label>
-                            <input type="text" class="form-control" name="email" id="idEmail">
-                        </div>
-                    </div>
+                    <input type="hidden" class="form-control" name="email" id="idEmail">
+                   
                     <div class="col-lg-12">
                         <div class="mb-3">
                             <label">Mês referente</label>
@@ -54,11 +49,28 @@
                             
 
                             getMes.value =  resultMes;
-                            console.log(formattedDate);
                             input.value = formattedDate;
 
                         }
                         </script>
+                        <script>
+                            // Função para lidar com a mudança de seleção
+                            function handleSelectionChange() {
+                              var selectedOption = document.getElementById("usuario").value;
+                              var emailField = document.getElementById("idEmail");
+                          
+                              if (selectedOption === "Todos") {
+                                emailField.disabled = true; // Desabilitar o campo de email
+                              } else {
+                                emailField.disabled = false; // Habilitar o campo de email
+                              }
+                            }
+                          
+                            // Adicionar um ouvinte de evento para o evento de mudança
+                            document.getElementById("usuario").addEventListener("change", handleSelectionChange);
+                          </script>
+                          
+                          
                     <input type="hidden" name="status" value="PENDENTE">
                     <input type="hidden" id="inputdata" name="date">
                     <input type="hidden" id="inputmes" name="numeromes" value="">

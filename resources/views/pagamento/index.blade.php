@@ -80,8 +80,6 @@
                         <table class="table table-centered table-nowrap table-hover mb-0">
                             <thead class="">
                                 <tr>
-                                    <!--<th><input type="checkbox" name="" id="select_all_ids"></th>-->
-                                    <th><input type="checkbox" name="" id="select_all_ids"></th>
                                     <th>Colaborador</th>
                                     <th>Mês referente</th>
                                     <th>Data</th>
@@ -91,9 +89,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($pags as $pag)
-                                    <tr id="employee_ids{{ $pag->id }}">
-                                        <td><input type="checkbox" name="ids" class="checkbox_ids"
-                                                value="{{ $pag->id }}"></td>
+                                    <tr>
                                         <td class="table-user">
                                             <img src="{{ url("storage/{$pag->foto}") }}" alt="{{ $pag->name }}"
                                                 class="me-2 rounded-circle">
@@ -146,82 +142,4 @@
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
-
-    <script>
-        $(function(e) {
-            $("#select_all_ids").click(function() {
-                $('.checkbox_ids').prop('checked', $(this).prop('checked'));
-
-                // Verificar se o checkbox está marcado
-                if ($(this).prop('checked')) {
-                    // Adicionar uma classe ao botão quando o checkbox estiver marcado
-                    $('#deleteAllSelectedRecord').removeClass('btn btn-secondary');
-                    $('#deleteAllSelectedRecord').addClass('btn btn-danger');
-                    $('#deleteAllSelectedRecord').prop('disabled', false);
-                } else {
-                    // Remover a classe do botão quando o checkbox estiver desmarcado
-                    $('#deleteAllSelectedRecord').removeClass('btn btn-danger');
-                    $('#deleteAllSelectedRecord').addClass('btn btn-secondary');
-                    $('#deleteAllSelectedRecord').prop('disabled', true);
-
-                }
-            });
-
-            $(".checkbox_ids").click(function() {
-                // Verificar se o checkbox está marcado
-                if ($('.checkbox_ids:checked').length > 1) {
-                    // Adicionar uma classe ao botão quando o checkbox estiver marcado
-                    $('#deleteAllSelectedRecord').removeClass('btn btn-secondary');
-                    $('#deleteAllSelectedRecord').addClass('btn btn-danger');
-                    $('#deleteAllSelectedRecord').prop('disabled', false);
-                } else {
-                    // Remover a classe do botão quando o checkbox estiver desmarcado
-                    $('#deleteAllSelectedRecord').removeClass('btn btn-danger');
-                    $('#deleteAllSelectedRecord').addClass('btn btn-secondary');
-                    $('#deleteAllSelectedRecord').prop('disabled', true);
-
-                }
-            });
-
-            $('#deleteAllSelectedRecord').click(function(e) {
-                e.preventDefault();
-                var all_ids = [];
-                $('input:checkbox[name=ids]:checked').each(function() {
-                    all_ids.push($(this).val());
-                });
-
-                Swal.fire({
-                    title: 'Excluír',
-                    text: `Deseja excluir os pagamento selecionados?`,
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonText: 'Sim',
-                    cancelButtonText: 'Cancelar'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: "{{ route('pagamento.delete') }}",
-                            type: "DELETE",
-                            data: {
-                                ids: all_ids,
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                $.each(all_ids, function(key, val) {
-                                    $('#employee_ids' + val).remove();
-                                    if (response.success) {
-                                        Swal.fire({
-                                            icon: 'success',
-                                            title: 'Successo',
-                                            text: response.message
-                                        });
-                                    }
-                                })
-                            }
-                        });
-                    }
-                });
-            });
-        });
-    </script>
 @endsection

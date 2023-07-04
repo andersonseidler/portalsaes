@@ -54,7 +54,7 @@
                 width: auto;
                 line-height: inherit;
                 outline: none;
-                color: #808080;
+                color: var(--ct-body-color);
             }
         
             .filter-btn {
@@ -62,7 +62,7 @@
                 font-size: inherit;
                 cursor: pointer;
                 border-radius: 4px;
-                background-color: #f2f2f2;
+                color: var(--ct-body-color);
                 border: none;
                 color: #333;
             }
@@ -129,6 +129,6 @@
         <!-- App js -->
         <script src="{{ url('assets/js/app.min.js') }}"></script>
         <script src="assets/vendor/fullcalendar/main.min.js"></script>
-        <script src="assets/js/pages/demo.calendar.js"></script>
+        {{-- <script src="assets/js/pages/demo.calendar.js"></script> --}}
     </body>
 </html> 
