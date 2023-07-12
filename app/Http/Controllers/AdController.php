@@ -63,6 +63,7 @@ class AdController extends Controller
                 
                 // Extrair o nome do usuário do texto da página
                 $nomeUsuario = $this->model->extrairNomeUsuario($textoPagina);
+                //dd($nomeUsuario);
                 $emailUsuario = $this->model->extrairEmailUsuario($nomeUsuario);
                 $fotoUsuario = $this->model->extrairFotoUsuario($nomeUsuario);
                 $dataAtual = Carbon::now();

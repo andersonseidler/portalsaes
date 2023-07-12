@@ -75,8 +75,8 @@
                         <div class="dropdown">
                             <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
                                 data-bs-target="#standard-modal">Cadastrar</button>
-                            <button class="btn btn-secondary btn-sm" id="deleteAllSelectedRecord" disabled><i
-                                    class="fa-solid fa-trash"></i></button>
+                            {{-- <button class="btn btn-secondary btn-sm" id="deleteAllSelectedRecord" disabled><i
+                                    class="fa-solid fa-trash"></i></button> --}}
                         </div>
                     </div>
                     @if ($pags->total() != 0)

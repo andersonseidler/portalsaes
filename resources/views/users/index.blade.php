@@ -32,7 +32,7 @@
             <div class="col-lg-6">
                 <div class="mb-3 text-end">
                     <a href="{{ route('users.create') }}" class="btn btn-success ">Cadastrar</a>
-                    <button class="btn btn-secondary" id="deleteAllSelectedRecord" disabled >Excluir</button> 
+                    {{-- <button class="btn btn-secondary" id="deleteAllSelectedRecord" disabled >Excluir</button>  --}}
                 </div>
             </div>
         </div>

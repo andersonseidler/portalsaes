@@ -44,7 +44,7 @@ class Adiantamento extends Model
 
     public function extrairNomeUsuario($textoPagina){
         // Suposição: O nome do usuário está precedido pela palavra "Nome:" ou "Nome do usuário:"
-        $padroes = ['/Nome\s*(\w+)/', '/Nome do funcionário:\s*(\w+)/'];
+        $padroes = ['/71\s*(\w+)/'];
     
         foreach ($padroes as $padrao) {
             if (preg_match($padrao, $textoPagina, $matches)) {
